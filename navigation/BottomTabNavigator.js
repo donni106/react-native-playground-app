@@ -4,6 +4,7 @@ import * as React from 'react';
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
+import ExpenseTrackerScreen from '../screens/ExpenseTrackerScreen';
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -32,6 +33,14 @@ export default function BottomTabNavigator({ navigation, route }) {
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-book" />
         }}
       />
+      <BottomTab.Screen
+        name="ExpenseTracker"
+        component={ExpenseTrackerScreen}
+        options={{
+          title: 'Expense Tracker',
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-cash" />
+        }}
+      />
     </BottomTab.Navigator>
   );
 }
@@ -44,5 +53,7 @@ function getHeaderTitle(route) {
       return 'How to get started';
     case 'Links':
       return 'Links to learn more';
+    case 'ExpenseTracker':
+      return 'Expense Tracker';
   }
 }
