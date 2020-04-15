@@ -1,5 +1,8 @@
-# react-native-playground-app
+# React Native - Playground App
 
-A React Native app with different things for trying out stuff.
+This project will be my playground for different React Native related topics.
+To try out stuff, it does not need always a new project, it can be included all in one.
 
-Built with Expo 36.
+---
+
+Built with [Expo](https://expo.io) 36.
