@@ -1,5 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AsyncStorage, Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  AsyncStorage,
+  Button,
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableNativeFeedback,
+  View
+} from 'react-native';
 
 import Colors from '../constants/Colors';
 
@@ -31,6 +41,13 @@ export default function ExpenseTrackerScreen() {
     }
   };
 
+  const removeExpense = (id) => {
+    // update expenses with removing an expense by id
+    const updatedExpenses = expenses.filter((expense) => expense.id !== id);
+
+    setExpenses(updatedExpenses);
+  };
+
   // run once (component did mount)
   useEffect(() => {
     rehydrate();
@@ -54,7 +71,7 @@ export default function ExpenseTrackerScreen() {
     <View style={styles.container}>
       <FlatList
         data={expenses}
-        renderItem={({ item }) => <Item {...item} />}
+        renderItem={({ item }) => <Item {...item} removeExpense={removeExpense} />}
         inverted
         keyExtractor={(item) => item.id.toString()}
         ref={flatList}
@@ -95,12 +112,37 @@ export default function ExpenseTrackerScreen() {
 }
 
 // eslint-disable-next-line react/prop-types
-function Item({ title, amount }) {
+function Item({ id, title, amount, removeExpense }) {
+  const [highlighted, setHighlighted] = useState(false);
+
+  const highlightItem = () => {
+    setHighlighted(true);
+  };
+
+  const notHighlightItem = () => {
+    setHighlighted(false);
+  };
+
+  if (highlighted) {
+    return (
+      <View style={[styles.item, styles.highlighted]}>
+        <TouchableOpacity onPress={() => removeExpense(id)}>
+          <Text style={styles.big}>Remove</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={notHighlightItem}>
+          <Text style={styles.small}>Cancel</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.item}>
-      <Text style={styles.small}>{title}</Text>
-      <Text style={styles.big}>{amount}</Text>
-    </View>
+    <TouchableNativeFeedback onLongPress={highlightItem}>
+      <View style={styles.item}>
+        <Text style={styles.small}>{title}</Text>
+        <Text style={styles.big}>{amount}</Text>
+      </View>
+    </TouchableNativeFeedback>
   );
 }
 
@@ -117,6 +159,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 8,
     padding: 10
+  },
+  highlighted: {
+    backgroundColor: Colors.errorBackground
   },
   actionContainer: {
     backgroundColor: Colors.dark,
