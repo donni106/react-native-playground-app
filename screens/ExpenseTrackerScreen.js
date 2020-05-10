@@ -55,16 +55,19 @@ export default function ExpenseTrackerScreen() {
 
   // run always when expenses changed (component did update)
   useEffect(() => {
-    // write all expenses to local storage
-    if (expenses && expenses.length) {
-      AsyncStorage.setItem('expenses', JSON.stringify(expenses));
-    }
+    // create async method to store data and scroll the list
+    const storeAndScroll = async () => {
+      // write all expenses to local storage
+      if (expenses && expenses.length) {
+        await AsyncStorage.setItem('expenses', JSON.stringify(expenses));
 
-    // scroll the list to top after adding an expense
-    // TODO: Need to be sure that adding expense has finished, before scrolling - instead of timeout
-    setTimeout(() => {
-      flatList && flatList.current.scrollToEnd();
-    }, 200);
+        // scroll the list to top after adding an expense
+        flatList && flatList.current.scrollToEnd();
+      }
+    };
+
+    // call the async method
+    storeAndScroll();
   }, [expenses]);
 
   return (
