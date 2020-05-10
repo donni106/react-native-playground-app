@@ -97,8 +97,8 @@ export default function ExpenseTrackerScreen() {
 function Item({ title, amount }) {
   return (
     <View style={styles.item}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.amount}>{amount}</Text>
+      <Text style={styles.small}>{title}</Text>
+      <Text style={styles.big}>{amount}</Text>
     </View>
   );
 }
@@ -139,11 +139,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     marginVertical: 8
   },
-  title: {
+  small: {
     color: Colors.light,
     fontSize: 14
   },
-  amount: {
+  big: {
     color: Colors.light,
     fontSize: 18
   }
