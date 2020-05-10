@@ -44,6 +44,7 @@ export default function ExpenseTrackerScreen() {
     }
 
     // scroll the list to top after adding an expense
+    // TODO: Need to be sure that adding expense has finished, before scrolling - instead of timeout
     setTimeout(() => {
       flatList && flatList.current.scrollToEnd();
     }, 200);
