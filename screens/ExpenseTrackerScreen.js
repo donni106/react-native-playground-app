@@ -3,6 +3,7 @@ import {
   AsyncStorage,
   Button,
   FlatList,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -108,7 +109,7 @@ export default function ExpenseTrackerScreen() {
           <Button
             onPress={addExpense}
             title="Add"
-            color="#013A6D"
+            color={Platform.OS === 'ios' ? Colors.light : Colors.tintColor}
             accessibilityLabel="Add an expense with the given title and amount"
           />
         </View>
