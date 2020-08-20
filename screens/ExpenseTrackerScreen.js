@@ -59,10 +59,13 @@ export default function ExpenseTrackerScreen() {
     const storeAndScroll = async () => {
       // write all expenses to local storage
       if (expenses && expenses.length) {
+        const storedExpenses = JSON.parse(await AsyncStorage.getItem('expenses'));
         await AsyncStorage.setItem('expenses', JSON.stringify(expenses));
 
-        // scroll the list to top after adding an expense
-        flatList && flatList.current.scrollToEnd();
+        if (storedExpenses.length < expenses.length) {
+          // scroll the list to top after adding an expense
+          flatList && flatList.current.scrollToEnd();
+        }
       }
     };
 
