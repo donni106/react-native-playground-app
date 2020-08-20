@@ -2,15 +2,11 @@
   "expo": {
     "name": "RN Playground",
     "slug": "react-native-playground-app",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
-    "version": "1.0.0",
+    "platforms": ["ios", "android", "web"],
+    "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "rnplayground",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -19,9 +15,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     }
