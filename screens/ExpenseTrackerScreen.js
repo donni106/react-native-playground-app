@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   AsyncStorage,
   Button,
@@ -11,10 +12,11 @@ import {
   TouchableNativeFeedback,
   View
 } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
 
 import Colors from '../constants/Colors';
 
-export default function ExpenseTrackerScreen() {
+export default function ExpenseTrackerScreen({ navigation, route }) {
   const [expenses, setExpenses] = useState([]);
   const [inputValues, setInputValues] = useState({ title: 'Expense', amount: '100' });
   const flatList = useRef();
@@ -74,6 +76,19 @@ export default function ExpenseTrackerScreen() {
     storeAndScroll();
   }, [expenses]);
 
+  useLayoutEffect(() => {
+    const sumAmounts = (a, b) => ({ amount: parseInt(a.amount, 10) + parseInt(b.amount, 10) });
+    const headerRight = () => (
+      <Text style={styles.headerRight}>{expenses.reduce(sumAmounts, { amount: 0 }).amount}</Text>
+    );
+
+    // https://reactnavigation.org/docs/navigation-actions/#setparams
+    navigation.dispatch({
+      ...CommonActions.setParams({ headerRight }),
+      source: route.params?.rootRouteKey
+    });
+  }, [expenses]);
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -117,6 +132,11 @@ export default function ExpenseTrackerScreen() {
     </View>
   );
 }
+
+ExpenseTrackerScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  route: PropTypes.object.isRequired
+};
 
 // eslint-disable-next-line react/prop-types
 function Item({ id, title, amount, removeExpense }) {
@@ -199,5 +219,10 @@ const styles = StyleSheet.create({
   big: {
     color: Colors.light,
     fontSize: 18
+  },
+  headerRight: {
+    color: Colors.tintColor,
+    fontSize: 18,
+    paddingHorizontal: 16
   }
 });
