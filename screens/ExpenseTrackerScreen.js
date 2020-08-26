@@ -13,6 +13,7 @@ import {
   View
 } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
+import { Icon, ListItem, normalize } from 'react-native-elements';
 
 import Colors from '../constants/Colors';
 
@@ -138,8 +139,7 @@ ExpenseTrackerScreen.propTypes = {
   route: PropTypes.object.isRequired
 };
 
-// eslint-disable-next-line react/prop-types
-function Item({ id, title, amount, removeExpense }) {
+const Item = ({ id, title, amount, removeExpense }) => {
   const [highlighted, setHighlighted] = useState(false);
 
   const highlightItem = () => {
@@ -152,77 +152,113 @@ function Item({ id, title, amount, removeExpense }) {
 
   if (highlighted) {
     return (
-      <View style={[styles.item, styles.highlighted]}>
-        <TouchableOpacity onPress={() => removeExpense(id)}>
-          <Text style={styles.big}>Remove</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={notHighlightItem}>
-          <Text style={styles.small}>Cancel</Text>
-        </TouchableOpacity>
-      </View>
+      <ListItem
+        leftElement={
+          <TouchableOpacity onPress={() => removeExpense(id)} style={styles.row}>
+            <Icon
+              {...{ type: 'ionicon', name: 'ios-close-circle-outline', color: Colors.light }}
+              style={styles.highlightedIcon}
+            />
+            <Text style={[styles.big, styles.light]}>Remove</Text>
+          </TouchableOpacity>
+        }
+        rightElement={
+          <TouchableOpacity onPress={notHighlightItem}>
+            <Text style={[styles.small, styles.light]}>Cancel</Text>
+          </TouchableOpacity>
+        }
+        bottomDivider
+        containerStyle={[styles.item, styles.highlighted]}
+      />
     );
   }
 
+  const leftIconName = amount < 0 ? 'ios-return-right' : 'ios-return-left';
+  const leftIconColor = amount < 0 ? Colors.successIcon : Colors.errorIcon;
+
   return (
-    <TouchableNativeFeedback onLongPress={highlightItem}>
-      <View style={styles.item}>
-        <Text style={styles.small}>{title}</Text>
-        <Text style={styles.big}>{amount}</Text>
-      </View>
-    </TouchableNativeFeedback>
+    <ListItem
+      Component={TouchableNativeFeedback}
+      leftIcon={{ type: 'ionicon', name: leftIconName, color: leftIconColor }}
+      title={<Text style={styles.small}>{title}</Text>}
+      rightTitle={<Text style={styles.big}>{amount}</Text>}
+      onLongPress={highlightItem}
+      bottomDivider
+    />
   );
-}
+};
+
+Item.propTypes = {
+  id: PropTypes.number,
+  title: PropTypes.string,
+  amount: PropTypes.number,
+  removeExpense: PropTypes.func
+};
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.light,
     flex: 1
   },
-  item: {
-    alignItems: 'center',
-    backgroundColor: Colors.tintColor,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: 16,
-    marginVertical: 8,
-    padding: 10
+  row: {
+    flexDirection: 'row'
   },
   highlighted: {
     backgroundColor: Colors.errorBackground
+  },
+  highlightedIcon: {
+    ...Platform.select({
+      ios: {
+        paddingRight: 14
+      },
+      default: {
+        paddingRight: 16
+      }
+    })
   },
   actionContainer: {
     backgroundColor: Colors.dark,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 8,
-    paddingVertical: 8
+    paddingHorizontal: normalize(8),
+    paddingVertical: normalize(8)
   },
   textInput: {
     backgroundColor: Colors.light,
     flex: 4,
-    marginHorizontal: 8,
-    marginVertical: 8,
-    paddingHorizontal: 8
+    marginHorizontal: normalize(8),
+    marginVertical: normalize(8),
+    paddingHorizontal: normalize(8)
   },
   amountInput: {
     flex: 2
   },
   buttonInput: {
     flex: 2,
-    marginHorizontal: 8,
-    marginVertical: 8
+    marginHorizontal: normalize(8),
+    marginVertical: normalize(8)
   },
   small: {
-    color: Colors.light,
-    fontSize: 14
+    color: Colors.tintColor,
+    fontSize: normalize(12)
   },
   big: {
-    color: Colors.light,
-    fontSize: 18
+    color: Colors.tintColor,
+    fontSize: normalize(16)
+  },
+  light: {
+    color: Colors.light
   },
   headerRight: {
     color: Colors.tintColor,
-    fontSize: 18,
-    paddingHorizontal: 16
+    fontSize: normalize(16),
+    ...Platform.select({
+      ios: {
+        paddingHorizontal: 14
+      },
+      default: {
+        paddingHorizontal: 16
+      }
+    })
   }
 });
