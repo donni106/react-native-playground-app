@@ -2,24 +2,23 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   AsyncStorage,
-  Button,
   FlatList,
+  KeyboardAvoidingView,
   Platform,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
   TouchableNativeFeedback,
+  TouchableOpacity,
   View
 } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
-import { Icon, ListItem, normalize } from 'react-native-elements';
+import { Button, Icon, Input, ListItem, normalize } from 'react-native-elements';
 
 import Colors from '../constants/Colors';
 
 export default function ExpenseTrackerScreen({ navigation, route }) {
   const [expenses, setExpenses] = useState([]);
-  const [inputValues, setInputValues] = useState({ title: 'Expense', amount: '100' });
+  const [inputValues, setInputValues] = useState({});
   const flatList = useRef();
 
   // read all expenses from local storage
@@ -90,8 +89,16 @@ export default function ExpenseTrackerScreen({ navigation, route }) {
     });
   }, [expenses]);
 
+  const { title, amount = 0 } = inputValues;
+  const buttonIconName = amount < 0 ? 'ios-return-right' : 'ios-return-left';
+  const buttonIconColor = amount < 0 ? Colors.successIcon : Colors.errorIcon;
+
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS == 'ios' && 'padding'}
+      keyboardVerticalOffset={Platform.OS == 'ios' && 62}
+      style={styles.container}
+    >
       <FlatList
         data={expenses}
         renderItem={({ item }) => <Item {...item} removeExpense={removeExpense} />}
@@ -100,37 +107,53 @@ export default function ExpenseTrackerScreen({ navigation, route }) {
         ref={flatList}
       />
       <View style={styles.actionContainer}>
-        <TextInput
-          style={styles.textInput}
+        <Input
+          placeholder="Expense/Income"
+          placeholderTextColor={Colors.tabIconDefault}
+          containerStyle={styles.textInput}
+          inputStyle={styles.textInputText}
+          renderErrorMessage={false}
           onChangeText={(text) =>
             setInputValues({
               ...inputValues,
               title: text
             })
           }
-          value={inputValues.title}
         />
-        <TextInput
-          style={[styles.textInput, styles.amountInput]}
+        <Input
+          placeholder="100"
+          placeholderTextColor={Colors.tabIconDefault}
+          containerStyle={[styles.textInput, styles.amountInput]}
+          inputStyle={styles.textInputText}
+          renderErrorMessage={false}
           onChangeText={(text) =>
             setInputValues({
               ...inputValues,
               amount: text
             })
           }
-          value={inputValues.amount}
-          keyboardType="number-pad"
+          keyboardType={Platform.select({ ios: 'numbers-and-punctuation', default: 'numeric' })}
         />
-        <View style={styles.buttonInput}>
-          <Button
-            onPress={addExpense}
-            title="Add"
-            color={Platform.OS === 'ios' ? Colors.light : Colors.tintColor}
-            accessibilityLabel="Add an expense with the given title and amount"
-          />
-        </View>
+        <Button
+          containerStyle={styles.buttonContainer}
+          buttonStyle={styles.buttonInput}
+          titleStyle={styles.buttonInputTitle}
+          icon={{
+            type: 'ionicon',
+            name: buttonIconName,
+            color: buttonIconColor,
+            size: normalize(16)
+          }}
+          iconContainerStyle={styles.buttonInputIcon}
+          raised
+          disabled={!title || !amount}
+          onPress={addExpense}
+          title="Add"
+          color={Platform.OS === 'ios' ? Colors.light : Colors.tintColor}
+          accessibilityLabel="Add an expense with the given title and amount"
+        />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -173,8 +196,8 @@ const Item = ({ id, title, amount, removeExpense }) => {
     );
   }
 
-  const leftIconName = amount < 0 ? 'ios-return-right' : 'ios-return-left';
-  const leftIconColor = amount < 0 ? Colors.successIcon : Colors.errorIcon;
+  const leftIconName = parseInt(amount, 10) < 0 ? 'ios-return-right' : 'ios-return-left';
+  const leftIconColor = parseInt(amount, 10) < 0 ? Colors.successIcon : Colors.errorIcon;
 
   return (
     <ListItem
@@ -191,7 +214,7 @@ const Item = ({ id, title, amount, removeExpense }) => {
 Item.propTypes = {
   id: PropTypes.number,
   title: PropTypes.string,
-  amount: PropTypes.number,
+  amount: PropTypes.string,
   removeExpense: PropTypes.func
 };
 
@@ -217,26 +240,44 @@ const styles = StyleSheet.create({
     })
   },
   actionContainer: {
+    alignItems: 'center',
     backgroundColor: Colors.dark,
     flexDirection: 'row',
+    ...Platform.select({
+      ios: {
+        paddingHorizontal: 14
+      },
+      default: {
+        paddingHorizontal: 16
+      }
+    }),
     justifyContent: 'space-between',
-    paddingHorizontal: normalize(8),
     paddingVertical: normalize(8)
   },
   textInput: {
-    backgroundColor: Colors.light,
     flex: 4,
-    marginHorizontal: normalize(8),
-    marginVertical: normalize(8),
-    paddingHorizontal: normalize(8)
+    paddingHorizontal: 0
+  },
+  textInputText: {
+    color: Colors.light,
+    fontSize: normalize(12),
+    minHeight: normalize(26)
   },
   amountInput: {
+    flex: 2,
+    marginHorizontal: normalize(8)
+  },
+  buttonContainer: {
     flex: 2
   },
   buttonInput: {
-    flex: 2,
-    marginHorizontal: normalize(8),
-    marginVertical: normalize(8)
+    backgroundColor: Colors.light
+  },
+  buttonInputTitle: {
+    color: Colors.dark
+  },
+  buttonInputIcon: {
+    marginLeft: 0
   },
   small: {
     color: Colors.tintColor,
