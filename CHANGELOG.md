@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [v0.3.0]
+
+Update app to work in the web with react-native-web
+
 ## [v0.2.0]
 
 Updated layout with using React Native Elements
