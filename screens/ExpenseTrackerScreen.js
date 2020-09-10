@@ -176,23 +176,21 @@ const Item = ({ id, title, amount, removeExpense }) => {
   if (highlighted) {
     return (
       <ListItem
-        leftElement={
-          <TouchableOpacity onPress={() => removeExpense(id)} style={styles.row}>
-            <Icon
-              {...{ type: 'ionicon', name: 'ios-close-circle-outline', color: Colors.light }}
-              style={styles.highlightedIcon}
-            />
-            <Text style={[styles.big, styles.light]}>Remove</Text>
-          </TouchableOpacity>
-        }
-        rightElement={
-          <TouchableOpacity onPress={notHighlightItem}>
-            <Text style={[styles.small, styles.light]}>Cancel</Text>
-          </TouchableOpacity>
-        }
         bottomDivider
         containerStyle={[styles.item, styles.highlighted]}
-      />
+      >
+        <TouchableOpacity onPress={() => removeExpense(id)} style={styles.row}>
+          <Icon
+            {...{ type: 'ionicon', name: 'ios-close-circle-outline', color: Colors.light }}
+            style={styles.highlightedIcon}
+          />
+          <Text style={[styles.big, styles.light]}>Remove</Text>
+        </TouchableOpacity>
+        <ListItem.Content />
+        <TouchableOpacity onPress={notHighlightItem}>
+          <Text style={[styles.small, styles.light]}>Cancel</Text>
+        </TouchableOpacity>
+      </ListItem>
     );
   }
 
@@ -201,13 +199,15 @@ const Item = ({ id, title, amount, removeExpense }) => {
 
   return (
     <ListItem
-      Component={TouchableNativeFeedback}
-      leftIcon={{ type: 'ionicon', name: leftIconName, color: leftIconColor }}
-      title={<Text style={styles.small}>{title}</Text>}
-      rightTitle={<Text style={styles.big}>{amount}</Text>}
-      onLongPress={highlightItem}
+      Component={TouchableNativeFeedback}onLongPress={highlightItem}
       bottomDivider
-    />
+    >
+      <Icon {...{ type: 'ionicon', name: leftIconName, color: leftIconColor }} />
+      <ListItem.Content>
+        <Text style={styles.small}>{title}</Text>
+      </ListItem.Content>
+      <Text style={styles.big}>{amount}</Text>
+    </ListItem>
   );
 };
 
