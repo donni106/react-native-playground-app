@@ -6,7 +6,7 @@
     "description": "This project will be my playground for different React Native related topics. To try out stuff, it does not need always a new project, it can be included all in one.",
     "githubUrl": "https://github.com/donni106/react-native-playground-app/pulls",
     "platforms": ["ios", "android", "web"],
-    "version": "0.1.0",
+    "version": "0.2.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "rnplayground",

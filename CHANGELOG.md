@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [v0.2.0]
+
+Updated layout with using React Native Elements
+
+https://react-native-elements.github.io/react-native-elements/
+
 ## [v0.1.0]
 
 Updated Expo SDK from 36 to 38.
