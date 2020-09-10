@@ -7,14 +7,16 @@ import {
   Platform,
   StyleSheet,
   Text,
+  TouchableHighlight,
   TouchableNativeFeedback,
   TouchableOpacity,
   View
 } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
-import { Button, Icon, Input, ListItem, normalize } from 'react-native-elements';
+import { Button, Icon, Input, ListItem, normalize, ThemeProvider } from 'react-native-elements';
 
 import Colors from '../constants/Colors';
+import theme from '../configs/theme';
 
 export default function ExpenseTrackerScreen({ navigation, route }) {
   const [expenses, setExpenses] = useState([]);
@@ -65,8 +67,8 @@ export default function ExpenseTrackerScreen({ navigation, route }) {
         const storedExpenses = JSON.parse(await AsyncStorage.getItem('expenses'));
         await AsyncStorage.setItem('expenses', JSON.stringify(expenses));
 
-        if (storedExpenses.length < expenses.length) {
-          // scroll the list to top after adding an expense
+        if ((storedExpenses || []).length < expenses.length) {
+          // scroll the list to top/bottom after adding an expense
           flatList && flatList.current.scrollToEnd();
         }
       }
@@ -99,13 +101,15 @@ export default function ExpenseTrackerScreen({ navigation, route }) {
       keyboardVerticalOffset={Platform.OS == 'ios' && 62}
       style={styles.container}
     >
-      <FlatList
-        data={expenses}
-        renderItem={({ item }) => <Item {...item} removeExpense={removeExpense} />}
-        inverted
-        keyExtractor={(item) => item.id.toString()}
-        ref={flatList}
-      />
+      <ThemeProvider theme={theme}>
+        <FlatList
+          data={expenses}
+          renderItem={({ item }) => <Item {...item} removeExpense={removeExpense} />}
+          inverted={Platform.OS != 'web'}
+          keyExtractor={(item) => item.id.toString()}
+          ref={flatList}
+        />
+      </ThemeProvider>
       <View style={styles.actionContainer}>
         <Input
           placeholder="Expense/Income"
@@ -199,7 +203,12 @@ const Item = ({ id, title, amount, removeExpense }) => {
 
   return (
     <ListItem
-      Component={TouchableNativeFeedback}onLongPress={highlightItem}
+      Component={Platform.select({
+        ios: TouchableOpacity,
+        android: TouchableNativeFeedback,
+        default: TouchableHighlight
+      })}
+      onLongPress={highlightItem}
       bottomDivider
     >
       <Icon {...{ type: 'ionicon', name: leftIconName, color: leftIconColor }} />
