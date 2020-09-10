@@ -6,11 +6,12 @@ export default function (containerRef) {
     prefixes: [Linking.makeUrl('/')],
     config: {
       Root: {
-        path: 'root',
+        path: '',
         screens: {
           Home: 'home',
           Links: 'links',
-          Settings: 'settings'
+          Settings: 'settings',
+          ExpenseTracker: 'expense-tracker'
         }
       }
     }
