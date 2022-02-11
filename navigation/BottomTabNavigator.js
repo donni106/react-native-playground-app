@@ -1,11 +1,12 @@
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import TabBarIcon from '../components/TabBarIcon';
+import ExpenseTrackerScreen from '../screens/ExpenseTrackerScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
-import ExpenseTrackerScreen from '../screens/ExpenseTrackerScreen';
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -57,7 +58,7 @@ BottomTabNavigator.propTypes = {
 };
 
 function getHeaderTitle(route) {
-  const routeName = route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
+  const routeName = getFocusedRouteNameFromRoute(route) ?? INITIAL_ROUTE_NAME;
 
   switch (routeName) {
     case 'Home':
@@ -70,7 +71,7 @@ function getHeaderTitle(route) {
 }
 
 function getHeaderRight(route) {
-  const routeName = route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
+  const routeName = getFocusedRouteNameFromRoute(route) ?? INITIAL_ROUTE_NAME;
 
   switch (routeName) {
     case 'Home':
