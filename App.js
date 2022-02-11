@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import * as Font from 'expo-font';
+import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
@@ -17,20 +17,19 @@ export default function App(props) {
   const containerRef = React.useRef();
   const { getInitialState } = useLinking(containerRef);
 
+  // Load fonts
+  const [loaded] = useFonts({
+    'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf')
+  });
+
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
-    async function loadResourcesAndDataAsync() {
+    const loadResourcesAndDataAsync = async () => {
       try {
         SplashScreen.preventAutoHideAsync();
 
         // Load our initial navigation state
         setInitialNavigationState(await getInitialState());
-
-        // Load fonts
-        await Font.loadAsync({
-          ...Ionicons.font,
-          'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf')
-        });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
         console.warn(e);
@@ -38,12 +37,12 @@ export default function App(props) {
         setLoadingComplete(true);
         SplashScreen.hideAsync();
       }
-    }
+    };
 
     loadResourcesAndDataAsync();
   }, []);
 
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
+  if (!loaded || (!isLoadingComplete && !props.skipLoadingScreen)) {
     return null;
   } else {
     return (
