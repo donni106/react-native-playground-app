@@ -92,7 +92,7 @@ export default function ExpenseTrackerScreen({ navigation, route }) {
   }, [expenses]);
 
   const { title, amount = 0 } = inputValues;
-  const buttonIconName = amount < 0 ? 'ios-return-right' : 'ios-return-left';
+  const buttonIconName = amount < 0 ? 'return-down-forward' : 'return-down-back';
   const buttonIconColor = amount < 0 ? Colors.successIcon : Colors.errorIcon;
 
   return (
@@ -198,7 +198,7 @@ const Item = ({ id, title, amount, removeExpense }) => {
     );
   }
 
-  const leftIconName = parseInt(amount, 10) < 0 ? 'ios-return-right' : 'ios-return-left';
+  const leftIconName = parseInt(amount, 10) < 0 ? 'return-down-forward' : 'return-down-back';
   const leftIconColor = parseInt(amount, 10) < 0 ? Colors.successIcon : Colors.errorIcon;
 
   return (
