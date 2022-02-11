@@ -1,7 +1,8 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CommonActions } from '@react-navigation/native';
 import PropTypes from 'prop-types';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
-  AsyncStorage,
   FlatList,
   KeyboardAvoidingView,
   Platform,
@@ -12,11 +13,10 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { CommonActions } from '@react-navigation/native';
 import { Button, Icon, Input, ListItem, normalize, ThemeProvider } from 'react-native-elements';
 
-import Colors from '../constants/Colors';
 import theme from '../configs/theme';
+import Colors from '../constants/Colors';
 
 export default function ExpenseTrackerScreen({ navigation, route }) {
   const [expenses, setExpenses] = useState([]);
@@ -179,10 +179,7 @@ const Item = ({ id, title, amount, removeExpense }) => {
 
   if (highlighted) {
     return (
-      <ListItem
-        bottomDivider
-        containerStyle={[styles.item, styles.highlighted]}
-      >
+      <ListItem bottomDivider containerStyle={[styles.item, styles.highlighted]}>
         <TouchableOpacity onPress={() => removeExpense(id)} style={styles.row}>
           <Icon
             {...{ type: 'ionicon', name: 'ios-close-circle-outline', color: Colors.light }}
